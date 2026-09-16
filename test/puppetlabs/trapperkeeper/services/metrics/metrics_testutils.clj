@@ -1,6 +1,7 @@
 (ns puppetlabs.trapperkeeper.services.metrics.metrics-testutils
   (:import (com.codahale.metrics.graphite GraphiteSender))
-  (:require [schema.core :as schema]))
+  (:require [schema.core :as schema]
+            [clojure.set :as set]))
 
 (def graphite-config
   {:graphite
@@ -24,7 +25,7 @@
   (reify GraphiteSender
     (connect [this])
     (send [this name value timestamp]
-      (swap! reported-metrics #(update-in % [domain] clojure.set/union #{name})))
+      (swap! reported-metrics #(update-in % [domain] set/union #{name})))
     (flush [this])
     (isConnected [this] true)
     (getFailures [this] 0)
